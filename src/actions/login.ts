@@ -1,7 +1,13 @@
 "use server"
+import * as z from 'zod';
 
-export const login =(values:any)=>{
-    setTimeout(()=>{
-        console.log(values);
-    }, 5000)
+import { LoginSchema } from '@/schemas';
+
+export const login = async (values:z.infer<typeof LoginSchema>)=>{
+    const validateField = LoginSchema.safeParse(values);
+
+    if(!validateField.success){
+        return ({error:"Invalid data!"});
+    }
+    return ({success:"Email sent!"});
 }
