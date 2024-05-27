@@ -7,7 +7,7 @@ import {
     FormLabel,
     FormMessage
 } from "@/components/ui/form"
-import { useTransition } from "react";
+import { useTransition, useState, useEffect } from "react";
 import { CardWrapper } from "./card-wrapper";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
@@ -23,6 +23,8 @@ import {FormSuccess} from "@/components/form-success";
 import { login } from "@/actions/login";
 
  const LoginForm = () => {
+    const [error, setError] = useState<string | undefined>("");
+    const [success, setSuccess] = useState<string | undefined>("");
     const [isPending, setPending]=useTransition();
     const form = useForm<z.infer<typeof LoginSchema>>({
         resolver: zodResolver(LoginSchema),
@@ -32,10 +34,23 @@ import { login } from "@/actions/login";
         },
     });
 
-const onSubmit = (values:z.infer<typeof LoginSchema>)=>{
-    setPending(()=>{login(values)});
+    //rerendering check
+    useEffect(() => {
+        console.log("LoginForm component re-rendered");
+    });
     
-}
+
+const onSubmit = (values:z.infer<typeof LoginSchema>)=>{
+    setError("");
+    setSuccess("");
+    setPending(()=>{login(values)
+    .then((data)=>{
+        setError(data.error);
+        setSuccess(data.success);
+        }
+    );
+    
+})}
 
     return ( <CardWrapper
     headerLabel="Welcome Back"
@@ -85,8 +100,8 @@ const onSubmit = (values:z.infer<typeof LoginSchema>)=>{
                         )}
                         />
                     </div>
-                <FormError message=""/>
-                <FormSuccess message=""/>
+                <FormError message={error}/>
+                <FormSuccess message={success}/>
                 <Button disabled={isPending} type="submit" className="w-full">Login</Button>
             </form>
         </Form>
