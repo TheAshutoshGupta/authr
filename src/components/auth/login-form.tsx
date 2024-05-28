@@ -14,7 +14,6 @@ import { useForm } from "react-hook-form";
 import * as z from "zod";
 import { LoginSchema } from "@/schemas";
 import { Input } from "@/components/ui/input";
-import { FaEye } from "react-icons/fa";
 import { Button } from "../ui/button";
 import { FormError } from "@/components/form-error";
 import {FormSuccess} from "@/components/form-success";
